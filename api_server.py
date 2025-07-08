@@ -11,6 +11,40 @@ CORS(app, origins=['https://*.netlify.app', 'http://localhost:3000'])  # Fronten
 def get_crypto_data():
     """CoinMarketCap'ten kripto para verilerini çeker"""
     try:
+        # API key kontrolü
+        if COINMARKETCAP_API_KEY == "demo_key":
+            # Demo data döndür
+            return jsonify({
+                "data": [
+                    {
+                        "id": 1,
+                        "name": "Bitcoin",
+                        "symbol": "BTC",
+                        "quote": {
+                            "USD": {
+                                "price": 43250.50,
+                                "percent_change_24h": 2.45,
+                                "market_cap": 845000000000,
+                                "volume_24h": 25000000000
+                            }
+                        }
+                    },
+                    {
+                        "id": 1027,
+                        "name": "Ethereum",
+                        "symbol": "ETH",
+                        "quote": {
+                            "USD": {
+                                "price": 2650.75,
+                                "percent_change_24h": -1.23,
+                                "market_cap": 318000000000,
+                                "volume_24h": 12000000000
+                            }
+                        }
+                    }
+                ]
+            })
+        
         url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
         headers = {
             'X-CMC_PRO_API_KEY': COINMARKETCAP_API_KEY,
@@ -43,6 +77,25 @@ def get_long_short():
 def get_global_metrics():
     """CoinMarketCap'ten global piyasa verilerini çeker"""
     try:
+        # API key kontrolü - demo data kullan
+        if COINMARKETCAP_API_KEY == "demo_key":
+            return jsonify({
+                "data": {
+                    "active_cryptocurrencies": 2847,
+                    "total_cryptocurrencies": 9916,
+                    "btc_dominance": 54.2,
+                    "eth_dominance": 16.8,
+                    "quote": {
+                        "USD": {
+                            "total_market_cap": 2100000000000,
+                            "total_volume_24h": 85000000000,
+                            "total_market_cap_yesterday_percentage_change": 2.04,
+                            "total_volume_24h_yesterday_percentage_change": -5.03
+                        }
+                    }
+                }
+            })
+        
         url = "https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest"
         headers = {
             'X-CMC_PRO_API_KEY': COINMARKETCAP_API_KEY,
@@ -705,6 +758,28 @@ def get_events():
 def health_check():
     """API sunucusunun durumunu kontrol eder"""
     return jsonify({'status': 'OK', 'message': 'API sunucusu çalışıyor'})
+
+@app.route('/health', methods=['GET'])
+def simple_health_check():
+    """Basit health check"""
+    return 'OK'
+
+@app.route('/', methods=['GET'])
+def root():
+    """Root endpoint"""
+    return jsonify({
+        'status': 'OK',
+        'message': 'Kripto Sohbeti API',
+        'version': '1.0.0',
+        'endpoints': [
+            '/api/health',
+            '/api/crypto-data',
+            '/api/news',
+            '/api/exchanges',
+            '/api/events',
+            '/api/global-metrics'
+        ]
+    })
 
 if __name__ == '__main__':
     import os

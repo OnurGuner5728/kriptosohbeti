@@ -6,7 +6,6 @@ const CalendarPage = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [viewType, setViewType] = useState('upcoming');
 
   useEffect(() => {

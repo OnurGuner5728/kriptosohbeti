@@ -1,6 +1,6 @@
 [build]
   base = "crypto-react-app"
-  publish = "crypto-react-app/build"
+  publish = "build"
   command = "npm run build"
 
 [build.environment]

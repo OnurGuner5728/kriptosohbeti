@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { apiService, formatCurrency, formatLargeNumber, formatPercentage } from '../services/api';
 import CryptoDictionary from '../components/CryptoDictionary';
-import axios from 'axios';
 import './HomePage.css';
 
 const HomePage = () => {
   const [marketData, setMarketData] = useState(null);
   const [cryptoData, setCryptoData] = useState([]);
-  const [movers, setMovers] = useState({ gainers: [], losers: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [connectionStatus, setConnectionStatus] = useState('checking');
@@ -20,12 +18,6 @@ const HomePage = () => {
   const [fearGreedIndex, setFearGreedIndex] = useState(null);
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
-  
-  // Carousel touch/drag için state'ler
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const carouselRef = useRef(null);
 
   useEffect(() => {
     loadData();
@@ -54,10 +46,9 @@ const HomePage = () => {
       setConnectionStatus('online');
 
       // Paralel olarak tüm verileri çek
-      const [marketOverview, cryptoResponse, moversData, globalMetricsData, newsResponse, fearGreedData] = await Promise.all([
+      const [marketOverview, cryptoResponse, globalMetricsData, newsResponse, fearGreedData] = await Promise.all([
         apiService.getMarketOverview(),
         apiService.getCryptoData(20),
-        apiService.getMovers(),
         fetch('http://localhost:5000/api/global-metrics').then(r => r.json()),
         apiService.getNews(),
         fetch('https://api.alternative.me/fng/?limit=1').then(r => r.json()).catch(() => null)
@@ -65,7 +56,6 @@ const HomePage = () => {
 
       setMarketData(marketOverview);
       setCryptoData(cryptoResponse.data);
-      setMovers(moversData);
       setGlobalMetrics(globalMetricsData.data);
       setNewsData(newsResponse.data);
       
@@ -122,28 +112,7 @@ const HomePage = () => {
     document.body.style.overflow = 'hidden';
   };
 
-  // Index-based haber tıklama işlevi
-  const handleNewsClickByIndex = useCallback((index) => {
-    if (!newsData || newsData.length === 0) return;
-    
-    const carouselNews = newsData.slice(0, 6);
-    const selectedNewsItem = carouselNews[index];
-    
-    if (!selectedNewsItem) {
-      console.error('Seçilen haber bulunamadı:', index);
-      return;
-    }
-    
-    console.log('🎯 ANA CAROUSEL TIKLAMA:');
-    console.log('   Index:', index);
-    console.log('   Seçilen:', selectedNewsItem.title);
-    console.log('   ID:', selectedNewsItem.id);
-    
-    setCurrentNewsIndex(index);
-    setSelectedNews(selectedNewsItem);
-    setIsModalOpen(true);
-    document.body.style.overflow = 'hidden';
-  }, [newsData]);
+
 
   // Modal kapatma işlevi
   const closeModal = () => {

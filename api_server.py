@@ -5,7 +5,33 @@ from config import COINMARKETCAP_API_KEY
 import requests
 
 app = Flask(__name__)
-CORS(app, origins=['https://*.netlify.app', 'https://*.netlify.com', 'http://localhost:3000', 'https://localhost:3000'])  # Frontend'den gelen istekleri kabul etmek için
+
+# CORS ayarları - Production için açık ayar
+CORS(app, 
+     origins=['*'],  # Geçici olarak tüm origin'lere izin ver
+     allow_headers=['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials'],
+     methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+     supports_credentials=True)
+
+# Manual CORS headers ekleme
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
+
+# Request logging
+@app.before_request
+def log_request_info():
+    print(f"📨 REQUEST: {request.method} {request.path} from {request.headers.get('Origin', 'Unknown')}")
+
+# OPTIONS pre-flight requests için
+@app.route('/api/<path:path>', methods=['OPTIONS'])
+def handle_options(path):
+    print(f"🔄 PREFLIGHT: /api/{path}")
+    return '', 200
 
 @app.route('/api/crypto-data', methods=['GET'])
 def get_crypto_data():
@@ -784,6 +810,8 @@ def root():
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 5000))
-    print(f"API Sunucusu başlatılıyor... Port: {port}")
-    print(f"Frontend'den API çağrıları için: http://localhost:{port}")
-    app.run(debug=False, host='0.0.0.0', port=port) 
+    print(f"🚀 API Sunucusu başlatılıyor... Port: {port}")
+    print(f"🌐 Frontend'den API çağrıları için: http://localhost:{port}")
+    print(f"🔑 COINMARKETCAP_API_KEY: {'✅ SET' if COINMARKETCAP_API_KEY != 'demo_key' else '❌ DEMO MODE'}")
+    print(f"🔒 CORS: Tüm origin'lere açık (Production)")
+    app.run(debug=True, host='0.0.0.0', port=port) 

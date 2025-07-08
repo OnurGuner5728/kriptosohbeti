@@ -5,7 +5,7 @@ from config import COINMARKETCAP_API_KEY
 import requests
 
 app = Flask(__name__)
-CORS(app, origins=['https://*.netlify.app', 'http://localhost:3000'])  # Frontend'den gelen istekleri kabul etmek için
+CORS(app, origins=['https://*.netlify.app', 'https://*.netlify.com', 'http://localhost:3000', 'https://localhost:3000'])  # Frontend'den gelen istekleri kabul etmek için
 
 @app.route('/api/crypto-data', methods=['GET'])
 def get_crypto_data():

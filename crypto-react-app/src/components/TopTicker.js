@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { apiService } from '../services/api';
 import './TopTicker.css';
 
 const TopTicker = () => {
@@ -49,8 +49,7 @@ const TopTicker = () => {
   useEffect(() => {
     const fetchMarketData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/global-metrics');
-        const data = response.data;
+        const data = await apiService.getGlobalMetrics();
         
         // Gerçek verilerden hesaplanan değerler
         const totalMarketCap = data.data.quote.USD.total_market_cap;

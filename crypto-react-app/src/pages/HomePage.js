@@ -49,7 +49,7 @@ const HomePage = () => {
       const [marketOverview, cryptoResponse, globalMetricsData, newsResponse, fearGreedData] = await Promise.all([
         apiService.getMarketOverview(),
         apiService.getCryptoData(20),
-        fetch('http://localhost:5000/api/global-metrics').then(r => r.json()),
+        apiService.getGlobalMetrics(),
         apiService.getNews(),
         fetch('https://api.alternative.me/fng/?limit=1').then(r => r.json()).catch(() => null)
       ]);

@@ -4,7 +4,7 @@
   command = "npm run build"
 
 [build.environment]
-  REACT_APP_API_URL = "https://kripto-sohbeti-backend.railway.app/api"
+  REACT_APP_API_URL = "https://web-coinmarketcapapikey.up.railway.app/api"
 
 [[redirects]]
   from = "/*"
@@ -12,7 +12,7 @@
   status = 200
 
 [context.production.environment]
-  REACT_APP_API_URL = "https://kripto-sohbeti-backend.railway.app/api"
+  REACT_APP_API_URL = "https://web-coinmarketcapapikey.up.railway.app/api"
 
 [context.deploy-preview.environment]
-  REACT_APP_API_URL = "https://kripto-sohbeti-backend.railway.app/api" 
+  REACT_APP_API_URL = "https://web-coinmarketcapapikey.up.railway.app/api" 

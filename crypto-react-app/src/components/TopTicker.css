@@ -1,0 +1,308 @@
+.top-ticker {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid #dee2e6;
+  overflow: hidden;
+  height: 25px;
+  position: sticky;
+  top: 0;
+  z-index: 1002;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ticker-container {
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.ticker-group {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+  animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  height: 100%;
+  border-right: 1px solid #dee2e6;
+  flex: 1;
+  min-width: 0; /* flex item overflow için */
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.ticker-item:last-child {
+  border-right: none;
+}
+
+.ticker-item:hover {
+  background-color: rgba(255, 179, 0, 0.1);
+}
+
+.ticker-label {
+  color: #6c757d;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ticker-value {
+  color: #212529;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  margin-right: auto;
+}
+
+.ticker-change {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ticker-change.positive {
+  color: #198754;
+  background-color: rgba(25, 135, 84, 0.1);
+}
+
+.ticker-change.negative {
+  color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+/* Development modunda son güncelleme zamanı */
+.dev-update-time {
+  position: absolute;
+  top: 1px;
+  right: 80px;
+  font-size: 0.40rem;
+  color: #6c757d;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 500;
+  z-index: 10;
+  border: 1px solid rgba(108, 117, 125, 0.2);
+}
+
+/* Grup göstergesi */
+.ticker-indicators {
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+  display: flex;
+  gap: 4px;
+}
+
+.indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(108, 117, 125, 0.3);
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background-color: #ffb300;
+  transform: scale(1.2);
+}
+
+/* Loading State */
+.ticker-content.loading {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  height: 50px;
+}
+
+.ticker-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .ticker-item {
+    padding: 0 12px;
+    gap: 6px;
+  }
+  
+  .ticker-label {
+    font-size: 0.75rem;
+  }
+  
+  .ticker-value {
+    font-size: 0.8rem;
+  }
+  
+  .ticker-change {
+    font-size: 0.7rem;
+    padding: 1px 4px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-ticker {
+    height: 45px;
+  }
+  
+  .ticker-container {
+    padding: 0 15px;
+  }
+  
+  .ticker-item {
+    padding: 0 8px;
+    gap: 4px;
+  }
+  
+  .ticker-label {
+    font-size: 0.7rem;
+  }
+  
+  .ticker-value {
+    font-size: 0.75rem;
+  }
+  
+  .ticker-change {
+    font-size: 0.65rem;
+    padding: 1px 3px;
+  }
+  
+  .ticker-indicators {
+    right: 8px;
+    bottom: 4px;
+  }
+  
+  .indicator {
+    width: 5px;
+    height: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-ticker {
+    height: 40px;
+  }
+  
+  .ticker-container {
+    padding: 0 10px;
+  }
+  
+  .ticker-item {
+    padding: 0 6px;
+    gap: 3px;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .ticker-label {
+    font-size: 0.65rem;
+    line-height: 1;
+  }
+  
+  .ticker-value {
+    font-size: 0.7rem;
+    line-height: 1;
+    margin-right: 0;
+  }
+  
+  .ticker-change {
+    font-size: 0.6rem;
+    padding: 1px 2px;
+    line-height: 1;
+  }
+  
+  .ticker-indicators {
+    right: 6px;
+    bottom: 3px;
+  }
+  
+  .indicator {
+    width: 4px;
+    height: 4px;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .top-ticker {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-bottom-color: #444;
+  }
+  
+  .ticker-item {
+    border-right-color: #444;
+  }
+  
+  .ticker-item:hover {
+    background-color: rgba(255, 179, 0, 0.15);
+  }
+  
+  .ticker-label {
+    color: #adb5bd;
+  }
+  
+  .ticker-value {
+    color: #f8f9fa;
+  }
+  
+  .indicator {
+    background-color: rgba(173, 181, 189, 0.3);
+  }
+  
+  .indicator.active {
+    background-color: #ffb300;
+  }
+}
+
+/* Hover durdurmak için */
+.ticker-container:hover .ticker-group {
+  animation-play-state: paused;
+}
+
+/* Geçiş efekti */
+.ticker-group {
+  transition: all 0.6s ease-out;
+} 

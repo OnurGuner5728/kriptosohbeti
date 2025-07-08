@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kripto Haberler</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style1.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --bg-main: #111;
+      --bg-card: #181818;
+      --text-main: #fff;
+      --text-secondary: #bfc2a7;
+      --border-main: #222;
+      --highlight: #ffb300;
+      --btn-bg: #181818;
+      --btn-border: #333;
+      --btn-hover: #222;
+      --footer-bg: #181818;
+      --footer-text: #fff;
+    }
+    body.light-theme {
+      --bg-main: #f7f7fa;
+      --bg-card: #fff;
+      --text-main: #000000;
+      --text-secondary: #666;
+      --border-main: #e0e0e0;
+      --highlight: #ffb300;
+      --btn-bg: #fff;
+      --btn-border: #e0e0e0;
+      --btn-hover: #f5f5f5;
+      --footer-bg: #f5f5f5;
+      --footer-text: #222;
+    }
+    body {
+      background: var(--bg-main);
+      color: var(--text-main);
+      transition: background 0.3s, color 0.3s;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 32px;
+      padding: 32px 5vw;
+      max-width: 1600px;
+      margin: 0 auto;
+      justify-content: center;
+    }
+    .news-card {
+      background: #222;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px #0004;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s;
+      min-height: 420px;
+      position: relative;
+      width: 100%;
+    }
+    .news-card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 6px 32px #0007;
+    }
+    .news-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: #111;
+      display: block;
+    }
+    .news-content {
+      padding: 24px 20px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .news-title {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 12px;
+      text-decoration: none;
+      line-height: 1.4;
+      min-height: 52px;
+    }
+    .news-title:hover {
+      color: #ffb300;
+    }
+    .news-meta {
+      font-size: 1em;
+      color: #ffb300;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .news-desc {
+      color: #ccc;
+      font-size: 1.05em;
+      margin-bottom: 14px;
+      flex: 1;
+      line-height: 1.5;
+    }
+    .news-date {
+      color: #aaa;
+      font-size: 0.95em;
+      margin-top: auto;
+      text-align: right;
+    }
+    @media (max-width: 768px) {
+      .news-grid {
+        padding: 20px 15px;
+        gap: 20px;
+      }
+      .news-card {
+        min-height: 380px;
+      }
+      .news-img {
+        height: 180px;
+      }
+      .news-content {
+        padding: 15px;
+      }
+      .news-title {
+        font-size: 1.1em;
+        min-height: 42px;
+      }
+      .news-meta {
+        font-size: 0.9em;
+      }
+      .news-desc {
+        font-size: 0.95em;
+      }
+      .main-header {
+        padding: 10px 15px;
+      }
+      .main-header nav ul {
+        gap: 15px;
+      }
+      .main-header .logo {
+        font-size: 1.2rem;
+      }
+      .main-header .logo-img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+    @media (max-width: 500px) {
+      .news-grid {
+        padding: 15px 10px;
+        gap: 15px;
+      }
+      .news-card {
+        min-height: 320px;
+      }
+      .news-img {
+        height: 140px;
+      }
+      .news-content {
+        padding: 12px;
+      }
+      .news-title {
+        font-size: 1em;
+        min-height: 36px;
+      }
+      .news-meta {
+        font-size: 0.85em;
+      }
+      .news-desc {
+        font-size: 0.9em;
+      }
+      .news-date {
+        font-size: 0.85em;
+      }
+      .main-header nav ul {
+        gap: 10px;
+        font-size: 0.9rem;
+      }
+      .main-header .header-actions button {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin: 20px 0;
+      }
+    }
+    .lang-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .lang-btn {
+      background: #b71c1c;
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      transition: box-shadow 0.2s;
+    }
+    .lang-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #ffb300;
+    }
+    .lang-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 44px;
+      background: #181818;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px #0008;
+      min-width: 140px;
+      z-index: 100;
+      padding: 8px 0;
+    }
+    .lang-dropdown.open .lang-menu {
+      display: block;
+    }
+    .lang-option {
+      padding: 10px 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-size: 1.08em;
+      transition: background 0.15s;
+    }
+    .lang-option:hover {
+      background: #222;
+    }
+    .flag-icon {
+      font-size: 1.2em;
+    }
+    .main-header {
+      background: var(--footer-bg);
+      padding: 15px 5vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-main);
+    }
+    .main-header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: var(--footer-text);
+    }
+    .main-header .logo-img {
+      width: 35px;
+      height: 35px;
+    }
+    .main-header nav ul {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .main-header nav a {
+      color: var(--footer-text);
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: color 0.2s;
+    }
+    .main-header nav a:hover {
+      color: var(--highlight);
+    }
+    .header-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .header-actions button {
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      color: var(--text-main);
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .header-actions button:hover {
+      background: var(--btn-hover);
+    }
+  </style>
+</head>
+<body>
+<header class="main-header">
+    <div class="logo">
+      <img src="favicon.png" alt="Logo" class="logo-img">
+      <span>Kripto Sohbeti</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html" data-i18n="menuHome">Ana Sayfa</a></li>
+        <li><a href="haberler.html" id="haberler-link" data-i18n="menuNews">Haberler</a></li>
+        <li><a href="kp.html" data-i18n="menuMarkets">Kripto Paralar</a></li>
+        <li><a href="borsa.html" data-i18n="menuExchanges">Borsalar</a></li>
+        <li><a href="#" data-i18n="menuCalendar">Takvim</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <div class="lang-dropdown" id="lang-dropdown">
+        <button class="lang-btn" id="lang-btn">
+          <span class="flag-icon" id="selected-flag">🇹🇷</span>
+        </button>
+        <div class="lang-menu" id="lang-menu">
+          <div class="lang-option" data-lang="en"><span class="flag-icon">🇺🇸</span> İngilizce</div>
+          <div class="lang-option" data-lang="tr"><span class="flag-icon">🇹🇷</span> Türkçe</div>
+        </div>
+      </div>
+      <button id="btn-theme" title="Tema Değiştir">🌙</button>
+    </div>
+</header>
+
+  <h1 style="text-align:center; margin:32px 0 0 0; color:#ffb300;" data-i18n="cryptoNews">Kripto Haberler</h1>
+  <!-- Google AdSense (örnek kod, kendi kodunla değiştir) -->
+  <div style="margin: 24px auto; max-width: 900px;">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle"
+         style="display:block; text-align:center;"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+         data-ad-slot="1234567890"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+  <div id="news-list" class="news-grid">
+    <div style="grid-column: 1/-1; text-align:center; color:#aaa;" data-i18n="loading">Yükleniyor...</div>
+  </div>
+
+  <script>
+    // Çeviri sistemi
+    const translations = {
+        tr: {
+            menuHome: "Ana Sayfa",
+            menuNews: "Haberler",
+            menuMarkets: "Kripto Paralar",
+            menuExchanges: "Borsalar",
+            menuData: "Veri",
+            menuCalendar: "Takvim",
+            menuPortfolio: "Portföy",
+            cryptoNews: "Kripto Haberler",
+            loading: "Yükleniyor...",
+            noNews: "Haber bulunamadı."
+        },
+        en: {
+            menuHome: "Home",
+            menuNews: "News",
+            menuMarkets: "Markets",
+            menuExchanges: "Exchanges",
+            menuData: "Data",
+            menuCalendar: "Calendar",
+            menuPortfolio: "Portfolio",
+            cryptoNews: "Crypto News",
+            loading: "Loading...",
+            noNews: "No news found."
+        }
+    };
+
+    let currentLang = 'tr';
+
+    function updateLanguage(lang) {
+        currentLang = lang;
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[lang][key]) {
+                element.textContent = translations[lang][key];
+            }
+        });
+    }
+
+    // Dil dropdown menüsü (yeni sistem)
+    const langDropdown = document.getElementById('lang-dropdown');
+    const langBtn = document.getElementById('lang-btn');
+    const langMenu = document.getElementById('lang-menu');
+    const selectedFlag = document.getElementById('selected-flag');
+
+    function setLangUI(lang) {
+      if (lang === 'en') selectedFlag.textContent = '🇺🇸';
+      else selectedFlag.textContent = '🇹🇷';
+    }
+    setLangUI(currentLang);
+
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+
+    langMenu.querySelectorAll('.lang-option').forEach(opt => {
+      opt.addEventListener('click', function() {
+        const lang = this.getAttribute('data-lang');
+        updateLanguage(lang);
+        setLangUI(lang);
+        langDropdown.classList.remove('open');
+      });
+    });
+
+    // Menü dışında bir yere tıklanınca menüyü kapat
+    document.addEventListener('click', () => {
+      langDropdown.classList.remove('open');
+    });
+
+    // RSS kaynakları
+    const newsSources = [
+      'https://www.coinkolik.com/feed/',
+      'https://koinbulteni.com/feed',
+      'https://kriptokoin.com/feed/',
+      'https://www.btchaber.com/feed/',
+      'https://www.cointurk.com/feed',
+      'https://kriptoparahaber.com/feed/',
+      'https://uzmancoin.com/feed/',
+      'https://tr.beincrypto.com/feed/',
+      'https://www.bitcoinhaber.net/feed/',
+      'https://tr.cointelegraph.com/rss',
+      'https://www.koinfinans.com/feed/',
+      'https://www.bitcoinsistemi.com/feed/',
+      'https://www.coindeskturkiye.com/feed/',
+      'https://muhabbit.com/feed/',
+      'https://www.kriptoteknikhaber.com/feed/',
+      // Google News özel RSS (kripto haberleri için):
+      'https://news.google.com/rss/publications/CAAqBwgKMP-vlgswotWtAw?hl=tr&gl=TR&ceid=TR:tr'
+    ];
+
+    const defaultImages = [
+      "https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1464983953574-0892a716854b?w=800&auto=format&fit=crop"
+    ];
+
+    function getDefaultImage(index) {
+      return defaultImages[index % defaultImages.length];
+    }
+
+    async function fetchAllNews() {
+      const allNews = [];
+      const loadingDiv = document.getElementById('news-list');
+      let loadedSources = 0;
+      const totalSources = newsSources.length;
+
+      // Paralel istekler için Promise.all kullan
+      const promises = newsSources.map(async (source) => {
+        try {
+          const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source)}`);
+          const data = await res.json();
+          loadedSources++;
+          
+          // Yükleme durumunu güncelle
+          loadingDiv.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:#aaa;">
+            Yükleniyor... (${loadedSources}/${totalSources} kaynak)
+          </div>`;
+
+          if (data.status === 'ok' && data.items) {
+            const sourceNews = data.items.slice(0, 4).map(item => ({
+              title: item.title,
+              link: item.link,
+              description: item.description,
+              pubDate: new Date(item.pubDate),
+              source: data.feed.title,
+              thumbnail: item.thumbnail || item.enclosure?.link || ''
+            }));
+            return sourceNews;
+          }
+          return [];
+        } catch (e) {
+          loadedSources++;
+          return [];
+        }
+      });
+
+      // Tüm istekleri paralel olarak çalıştır
+      const results = await Promise.all(promises);
+      
+      // Tüm haberleri birleştir
+      results.forEach(news => allNews.push(...news));
+
+      // Tarihe göre sırala (en yeni en başta)
+      allNews.sort((a, b) => b.pubDate - a.pubDate);
+      return allNews.slice(0, 24); // En güncel 24 haberi göster
+    }
+
+    function renderNewsList(news) {
+      const list = document.getElementById('news-list');
+      if (!news.length) {
+        list.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#aaa;">Haber bulunamadı.</div>';
+        return;
+      }
+      list.innerHTML = news.map((item, i) => `
+          <div class="news-card">
+            <a href="${item.link}" target="_blank" rel="noopener">
+            <img class="news-img" src="${(item.thumbnail && item.thumbnail !== '' ? item.thumbnail : getDefaultImage(i))}" alt="" onerror="this.onerror=null;this.src='${getDefaultImage(i)}';" />
+            </a>
+            <div class="news-content">
+              <div class="news-meta">${item.source || ''}</div>
+              <a class="news-title" href="${item.link}" target="_blank" rel="noopener">${item.title}</a>
+              <div class="news-desc">${item.description ? item.description.replace(/<[^>]+>/g, '').slice(0, 120) + '...' : ''}</div>
+              <div class="news-date">${item.pubDate.toLocaleDateString('tr-TR')}</div>
+            </div>
+          </div>
+      `).join('');
+    }
+
+    async function loadNews() {
+      renderNewsList([]); // loading
+      const news = await fetchAllNews();
+      renderNewsList(news);
+    }
+
+    loadNews();
+    setInterval(loadNews, 5 * 60 * 1000); // 5 dakikada bir güncelle
+
+    // Tema değiştirme fonksiyonu
+    document.getElementById('btn-theme').addEventListener('click', function() {
+        document.body.classList.toggle('light-theme');
+        const themeBtn = document.getElementById('btn-theme');
+        themeBtn.textContent = document.body.classList.contains('light-theme') ? '☀️' : '🌙';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kripto Paralar - Detaylı Piyasa Verileri</title>
+    <link rel="stylesheet" href="style1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            --bg-main: #111;
+            --bg-card: #181818;
+            --text-main: #fff;
+            --text-secondary: #bfc2a7;
+            --border-main: #222;
+            --highlight: #ffb300;
+            --btn-bg: #181818;
+            --btn-border: #333;
+            --btn-hover: #222;
+            --footer-bg: #181818;
+            --footer-text: #fff;
+        }
+        body.light-theme {
+            --bg-main: #f7f7fa;
+            --bg-card: #fff;
+            --text-main: #000000;
+            --text-secondary: #666;
+            --border-main: #e0e0e0;
+            --highlight: #ffb300;
+            --btn-bg: #fff;
+            --btn-border: #e0e0e0;
+            --btn-hover: #f5f5f5;
+            --footer-bg: #f5f5f5;
+            --footer-text: #222;
+        }
+        body {
+            background: var(--bg-main);
+            color: var(--text-main);
+            transition: background 0.3s, color 0.3s;
+        }
+        .main-header, .site-footer, .footer-container, .footer-section {
+            background: var(--footer-bg) !important;
+            color: var(--footer-text) !important;
+        }
+        .main-header nav ul li a {
+            color: var(--text-main);
+            transition: color 0.2s;
+        }
+        .main-header nav ul li a:hover {
+            color: var(--highlight);
+        }
+        /* Genel Sıfırlama ve Temel Stil (style1.css'de varsa tekrarlamaya gerek yok) */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #0f0f0f; /* Koyu tema ana arka plan */
+            color: #e0e0e0; /* Açık gri metin */
+            line-height: 1.6;
+        }
+
+        /* Ana Başlık (Header) */
+        .main-header {
+            background-color: #1a1a1a;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            flex-wrap: wrap; /* Küçük ekranlarda alt alta geçiş için */
+        }
+
+        .main-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffb300; /* Logo rengi */
+        }
+
+        .main-header .logo-img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .main-header nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap; /* Küçük ekranlarda menü öğeleri sarılması için */
+            justify-content: center; /* Ortalamak için */
+        }
+
+        .main-header nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            padding: 8px 0;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .main-header nav a.active {
+            color: #ffb300;
+            font-weight: bold;
+        }
+
+        .main-header nav a:hover {
+            color: #ffb300;
+        }
+
+        .main-header .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .main-header .header-actions button {
+            background-color: #333;
+            color: #e0e0e0;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .main-header .header-actions button:hover {
+            background-color: #555;
+        }
+
+        /* Kripto Paralar Sayfası İçeriği */
+        .crypto-container {
+            /* Genişletme için max-width değerini artırıyoruz */
+            max-width: 1400px; /* Daha geniş bir görünüm için */
+            margin: 30px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        /* Piyasa Özeti (Yükselenler, Düşenler, İstatistikler) */
+        .market-overview-grid {
+            display: flex;
+            /* Tüm alanı doldurması için flex-grow ve min-width düzenlemesi */
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 30px;
+            justify-content: center; /* Ortalamak için */
+            align-items: flex-start;
+        }
+
+        .market-movers {
+            display: flex;
+            flex-direction: row; /* Yan yana durması için */
+            gap: 18px;
+            flex: 2; /* İstatistiklerden daha fazla yer kaplasın */
+            min-width: 500px; /* Toplamda en az bu kadar olsun */
+            flex-wrap: wrap; /* Küçük ekranlarda içindeki kutular alt alta geçebilir */
+            justify-content: center; /* İçindeki kutuları ortala */
+        }
+
+        .movers-box {
+            background: #1e1e1e;
+            color: #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            padding: 15px 20px;
+            flex: 1; /* Esnek büyüme, eşit yer kaplasınlar */
+            min-width: 240px; /* Her bir kutunun minimum genişliği */
+            box-sizing: border-box;
+        }
+
+        .movers-box h3 {
+            font-size: 1.2rem; /* Başlık boyutunu artır */
+            margin-bottom: 15px;
+            color: #ffb300;
+            text-align: center;
+        }
+
+        .movers-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .movers-box li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0; /* Boşluğu artır */
+            border-bottom: 1px solid #2a2a2a;
+            font-size: 1rem; /* Yazı boyutunu artır */
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .movers-box li:last-child {
+            border-bottom: none;
+        }
+
+        .movers-box li:hover {
+            background-color: #2a2a2a;
+            border-radius: 4px;
+        }
+
+        .movers-box .coin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .movers-box img {
+            width: 26px; /* İkon boyutunu artır */
+            height: 26px;
+            border-radius: 50%;
+        }
+
+        .movers-box .change {
+            font-weight: 700;
+            padding: 5px 12px; /* Padding artır */
+            border-radius: 8px; /* Köşeleri yuvarla */
+            font-size: 0.95rem; /* Yazı boyutunu artır */
+        }
+
+        .movers-box .change.positive {
+            background: rgba(0, 200, 83, 0.2);
+            color: #00c853;
+        }
+
+        .movers-box .change.negative {
+            background: rgba(255, 61, 0, 0.2);
+            color: #ff3d00;
+        }
+
+        .market-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* İstatistik kutularını 2 sütun yap */
+            gap: 15px;
+            flex: 1; /* Diğer gride göre esnek büyüme */
+            min-width: 300px; /* Minimum genişlik */
+            box-sizing: border-box;
+        }
+
+        .stat-box {
+            background: #1e1e1e;
+            color: #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            padding: 65px; /* Padding artır */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center; /* İçeriği dikeyde ortala */
+        }
+
+        .stat-title {
+            font-size: 0.9rem; /* Başlık boyutunu artır */
+            color: #aaa;
+            margin-bottom: 8px; /* Boşluğu artır */
+        }
+
+        .stat-value {
+            font-size: 1.8rem; /* Değer boyutunu artır */
+            font-weight: 700;
+            color: #ffb300;
+            line-height: 1.2; /* Satır yüksekliğini ayarla */
+        }
+
+        .stat-value span {
+            font-size: 0.9rem; /* Korku endeksindeki "Greed" gibi metinler için */
+            color: #aaa;
+            margin-left: 5px;
+        }
+
+        /* Kripto Arama ve Filtreler */
+        .crypto-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .crypto-search {
+            padding: 10px 18px;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+            color: #e0e0e0;
+            width: 100%;
+            max-width: 350px;
+            box-sizing: border-box;
+        }
+
+        .crypto-search::placeholder {
+            color: #888;
+        }
+
+        .crypto-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            flex: 1;
+        }
+
+        .crypto-filters select {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #3a3a3a;
+            background-color: #2a2a2a;
+            color: #e0e0e0;
+            cursor: pointer;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20fill%3D%22%23e0e0e0%22%20d%3D%22M5%206l5%205%205-5z%22/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+        }
+
+        /* Kripto Tablosu */
+        .crypto-table {
+            width: 100%;
+            background: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            overflow-x: auto;
+            margin-top: 38px;
+        }
+
+        .crypto-table table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #e0e0e0;
+            min-width: 900px; /* Tablo içeriği daha geniş ve okunabilir olsun */
+        }
+
+        .crypto-table th,
+        .crypto-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #2a2a2a;
+            white-space: nowrap;
+        }
+
+        .crypto-table th {
+            background: #0d0d0d;
+            font-weight: 600;
+            color: #aaa;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .crypto-table tr:hover {
+            background: #2a2a2a;
+        }
+
+        .crypto-table td img {
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        /* Sparkline grafiği renkleri */
+        .price-change-positive {
+            color: #00c853;
+        }
+        .price-change-negative {
+            color: #ff3d00;
+        }
+
+        /* Mobil uyumluluk */
+        @media (max-width: 900px) {
+            .market-overview-grid {
+                flex-direction: column;
+                align-items: center;
+                padding: 0 15px;
+            }
+
+            .market-movers {
+                flex-direction: column;
+                min-width: unset;
+                width: 100%;
+            }
+
+            .market-stats {
+                grid-template-columns: 1fr;
+                min-width: unset;
+                width: 100%;
+            }
+
+            .crypto-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+                padding: 0 15px;
+            }
+
+            .crypto-search {
+                max-width: 100%;
+            }
+
+            .crypto-filters {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .crypto-table {
+                margin: 15px;
+                border-radius: 8px;
+            }
+
+            .crypto-table table {
+                min-width: 600px;
+            }
+
+            .main-header {
+                padding: 10px 15px;
+            }
+
+            .main-header nav ul {
+                gap: 15px;
+            }
+
+            .main-header .logo {
+                font-size: 1.2rem;
+            }
+
+            .main-header .logo-img {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .movers-box {
+                padding: 12px 15px;
+            }
+
+            .movers-box h3 {
+                font-size: 1.1rem;
+            }
+
+            .movers-box li {
+                font-size: 0.9rem;
+                padding: 8px 0;
+            }
+
+            .movers-box img {
+                width: 22px;
+                height: 22px;
+            }
+
+            .movers-box .change {
+                font-size: 0.85rem;
+                padding: 4px 8px;
+            }
+
+            .stat-box {
+                padding: 15px;
+            }
+
+            .stat-title {
+                font-size: 0.8rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .main-header nav ul {
+                gap: 10px;
+                font-size: 0.9rem;
+            }
+
+            .main-header .header-actions button {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+
+            .crypto-tabs {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 15px;
+                justify-content: center;
+            }
+
+            .tab-btn {
+                font-size: 0.85em;
+                padding: 3px 10px;
+            }
+        }
+
+        /* Coin Detail Modal (Zaten iyiydi, ufak dark mode uyumu) */
+        #coin-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 9999;
+        }
+        .modal-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #181818;
+            color: #fff;
+            border-radius: 16px;
+            min-width: 350px;
+            max-width: 95vw;
+            min-height: 300px;
+            max-height: 90vh;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            padding: 32px 24px 24px 24px;
+            overflow-y: auto;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px; right: 18px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .crypto-tabs {
+            position: absolute;
+            top: -18px;
+            right: 18px;
+            z-index: 2;
+            display: flex;
+            gap: 8px;
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            margin-bottom: 0;
+        }
+        .tab-btn {
+            background: #181818;
+            border: 1px solid #222;
+            color: #ccc;
+            font-size: 0.95em;
+            padding: 4px 12px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, border 0.2s;
+            min-width: 0;
+            min-height: 0;
+            margin: 0;
+        }
+        .tab-btn.active {
+            background: #ffb300;
+            color: #181818;
+            font-weight: bold;
+            border: 1.5px solid #ffb300;
+            box-shadow: 0 0 0 2px #222;
+        }
+        .tab-btn:hover:not(.active) {
+            background: #222;
+            color: #fff;
+            border: 1.5px solid #333;
+        }
+
+        .crypto-table-container {
+            position: relative;
+        }
+
+        .lang-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .lang-btn {
+            background: #b71c1c;
+            border: none;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: box-shadow 0.2s;
+        }
+        .lang-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #ffb300;
+        }
+        .lang-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 44px;
+            background: #181818;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #0008;
+            min-width: 140px;
+            z-index: 9999;
+            padding: 8px 0;
+        }
+        .lang-dropdown.open .lang-menu {
+            display: block;
+        }
+        .lang-option {
+            padding: 10px 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-size: 1.08em;
+            transition: background 0.15s;
+        }
+        .lang-option:hover {
+            background: #222;
+        }
+        .flag-icon {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <img src="favicon.png" alt="Logo" class="logo-img">
+            <span>Kripto Sohbeti</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" data-i18n="menuHome">Ana Sayfa</a></li>
+                <li><a href="haberler.html" id="haberler-link" data-i18n="menuNews">Haberler</a></li>
+                <li><a href="kp.html" data-i18n="menuMarkets">Kripto Paralar</a></li>
+                <li><a href="borsa.html" data-i18n="menuExchanges">Borsalar</a></li>
+                <li><a href="#" data-i18n="menuCalendar">Takvim</a></li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <div class="lang-dropdown" id="lang-dropdown">
+                <button class="lang-btn" id="lang-btn">
+                    <span class="flag-icon" id="selected-flag">🇹🇷</span>
+                </button>
+                <div class="lang-menu" id="lang-menu">
+                    <div class="lang-option" data-lang="en"><span class="flag-icon">🇺🇸</span> English</div>
+                    <div class="lang-option" data-lang="tr"><span class="flag-icon">🇹🇷</span> Türkçe</div>
+                </div>
+            </div>
+            <button id="btn-theme" title="Tema Değiştir">🌙</button>
+        </div>
+    </header>
+</br></br></br>
+    <main class="crypto-container">
+        <div class="market-overview-grid">
+            <div class="market-movers">
+                <div class="movers-box">
+                    <h3 data-i18n="gainers">Yükselenler</h3>
+                    <ul id="gainers-list"><li data-i18n="loading">Yükleniyor...</li></ul>
+                </div>
+                <div class="movers-box">
+                    <h3 data-i18n="losers">Düşenler</h3>
+                    <ul id="losers-list"><li data-i18n="loading">Yükleniyor...</li></ul>
+                </div>
+            </div>
+            <div class="market-stats">
+                <div class="stat-box">
+                    <div class="stat-title" data-i18n="volume24h">24 Saat Hacim</div>
+                    <div class="stat-value" id="stat-volume">$0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title" data-i18n="marketCap">Piyasa Değeri</div>
+                    <div class="stat-value" id="stat-marketcap">$0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title" data-i18n="fearIndex">Korku & Hırs Endeksi</div>
+                    <div class="stat-value" id="stat-fear">-</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title" data-i18n="dominance">Piyasa Dominansı</div>
+                    <div class="stat-value" id="stat-dominance">-</div>
+                </div>
+            </div>
+        </div>
+        <!-- Google AdSense (örnek kod, kendi kodunla değiştir) -->
+        <div style="margin: 24px auto; max-width: 900px;">
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+               data-ad-slot="1234567890"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+    </main>
+    <div class="crypto-table-container" style="position:relative;">
+        <br class="crypto-tabs" style="position:absolute;top:12px;right:18px;z-index:2;">
+            <button class="tab-btn active" data-tab="coins" data-i18n="cryptoCoins">Kripto Paralar</button>
+            <button class="tab-btn" data-tab="categories" data-i18n="categories">Kategoriler</button>
+        </div>
+        <div class="crypto-table"></br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th data-i18n="name">Ad</th>
+                        <th data-i18n="price">Fiyat</th>
+                        <th data-i18n="change24h">24s %</th>
+                        <th data-i18n="volume24h">24s Hacim</th>
+                        <th data-i18n="marketCap">Piyasa Değeri</th>
+                        <th data-i18n="circulatingSupply">Dolaşımdaki Arz</th>
+                        <th data-i18n="last7Days">Son 7 Gün</th>
+                    </tr>
+                </thead>
+                <tbody id="crypto-table-body">
+                    <tr><td colspan="8" style="text-align: center; padding: 20px;">Veriler Yükleniyor...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="crypto-pagination" style="display:flex;justify-content:center;gap:8px;margin:24px 0;"></div>
+
+    <div id="coin-modal" style="display:none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCoinModal()">&times;</button>
+            <div id="modal-coin-content">
+                </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Çeviri sistemi
+        const translations = {
+            tr: {
+                menuHome: "Ana Sayfa",
+                menuNews: "Haberler",
+                menuMarkets: "Kripto Paralar",
+                menuExchanges: "Borsalar",
+                menuData: "Veri",
+                menuCalendar: "Takvim",
+                menuPortfolio: "Portföy",
+                gainers: "Yükselenler",
+                losers: "Düşenler",
+                volume24h: "24 Saat Hacim",
+                marketCap: "Piyasa Değeri",
+                fearIndex: "Korku Endeksi",
+                dominance: "Dominans",
+                loading: "Yükleniyor...",
+                noData: "Veri alınamadı.",
+                searchPlaceholder: "Kripto para ara...",
+                sortBy: "Sırala",
+                sortMarketCap: "Piyasa Değeri",
+                sortVolume: "Hacim",
+                sortPrice: "Fiyat",
+                sortChange: "Değişim",
+                name: "Ad",
+                price: "Fiyat",
+                change24h: "24s %",
+                volume24h: "24s Hacim",
+                marketCap: "Piyasa Değeri",
+                circulatingSupply: "Dolaşımdaki Arz",
+                last7Days: "Son 7 Gün",
+                cryptoCoins: "Kripto Paralar",
+                categories: "Kategoriler",
+                protocols: "Protokoller",
+                tvl: "TVL",
+                mcap: "MCAP",
+                mcapTvl: "MCAP/TVL"
+            },
+            en: {
+                menuHome: "Home",
+                menuNews: "News",
+                menuMarkets: "Markets",
+                menuExchanges: "Exchanges",
+                menuData: "Data",
+                menuCalendar: "Calendar",
+                menuPortfolio: "Portfolio",
+                gainers: "Gainers",
+                losers: "Losers",
+                volume24h: "24h Volume",
+                marketCap: "Market Cap",
+                fearIndex: "Fear Index",
+                dominance: "Dominance",
+                loading: "Loading...",
+                noData: "No data available.",
+                searchPlaceholder: "Search crypto...",
+                sortBy: "Sort by",
+                sortMarketCap: "Market Cap",
+                sortVolume: "Volume",
+                sortPrice: "Price",
+                sortChange: "Change",
+                name: "Name",
+                price: "Price",
+                change24h: "24h %",
+                volume24h: "24h Volume",
+                marketCap: "Market Cap",
+                circulatingSupply: "Circulating Supply",
+                last7Days: "Last 7 Days",
+                cryptoCoins: "Crypto Coins",
+                categories: "Categories",
+                protocols: "Protocols",
+                tvl: "TVL",
+                mcap: "MCAP",
+                mcapTvl: "MCAP/TVL"
+            }
+        };
+
+        let currentLang = 'tr';
+
+        function updateLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // Gainers/Losers tıklanabilirlik (event delegation)
+        document.addEventListener('click', function(e) {
+            const li = e.target.closest('#gainers-list li, #losers-list li');
+            if (li) {
+                const coinId = li.getAttribute('data-coin-id');
+                // Symbol ve Name'i burdan alabiliriz ama fetchCoinDetail zaten API'den çekecek
+                openCoinModal(coinId);
+            }
+
+            // Tablodaki kripto paralara tıklama olayı
+            const row = e.target.closest('#crypto-table-body tr');
+            if (row && e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+                const coinId = row.getAttribute('data-coin-id');
+                if (coinId) {
+                    openCoinModal(coinId);
+                }
+            }
+        });
+
+
+        // Modal açma ve kapama fonksiyonları
+        window.openCoinModal = function(coinId) {
+            const modal = document.getElementById('coin-modal');
+            const content = document.getElementById('modal-coin-content');
+            if (modal && content) {
+                modal.style.display = 'block';
+                content.innerHTML = '<div style="text-align:center;padding:40px;color:white;">Yükleniyor...</div>';
+                fetchCoinDetail(coinId);
+            }
+        }
+        window.closeCoinModal = function() {
+            const modal = document.getElementById('coin-modal');
+            const content = document.getElementById('modal-coin-content');
+            if (modal && content) {
+                modal.style.display = 'none';
+                content.innerHTML = '';
+            }
+        }
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('coin-modal');
+            if (modal && modal.style.display === 'block' && e.target.classList.contains('modal-overlay')) {
+                window.closeCoinModal();
+            }
+        });
+
+
+        // Coin detay verisi ve TradingView
+        window.fetchCoinDetail = async function(coinId) {
+            const content = document.getElementById('modal-coin-content');
+            if (!content) return;
+
+            try {
+                const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false`);
+                if (!res.ok) {
+                    throw new Error(`CoinGecko API error! status: ${res.status}`);
+                }
+                const data = await res.json();
+                const md = data.market_data;
+
+                let tvSymbol = '';
+                if (data.tickers && data.tickers.length > 0) {
+                    const preferredExchanges = ['binance', 'kraken', 'coinbase', 'kucoin', 'gateio', 'bybit'];
+                    for (const ticker of data.tickers) {
+                        if (preferredExchanges.includes(ticker.market.identifier) && ticker.target === 'USDT' && ticker.trade_url) {
+                            tvSymbol = `${ticker.market.name.toUpperCase()}:${ticker.base}${ticker.target}`;
+                            break;
+                        }
+                    }
+                    if (!tvSymbol) {
+                        const usdtTicker = data.tickers.find(ticker => ticker.target === 'USDT' && ticker.trade_url);
+                        if (usdtTicker) {
+                            tvSymbol = `${usdtTicker.market.name.toUpperCase()}:${usdtTicker.base}${usdtTicker.target}`;
+                        }
+                    }
+                }
+
+                if (!tvSymbol) {
+                    tvSymbol = `${data.symbol.toUpperCase()}USD`;
+                }
+
+                content.innerHTML = `
+                    <div style="display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start;">
+                        <div style="min-width:260px;max-width:340px;flex:1;">
+                            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                                <img src="${data.image.large}" alt="${data.name}" style="width:40px;height:40px;">
+                                <span style="font-size:1.5rem;font-weight:600;">${data.name} <span style='font-size:1rem;color:#aaa;'>(${data.symbol.toUpperCase()})</span></span>
+                            </div>
+                            <div style="font-size:2rem;font-weight:700;">$${(md.current_price.usd || 0).toLocaleString()} <span style="font-size:1.1rem;color:${(md.price_change_percentage_24h || 0) >= 0 ? '#00c853' : '#ff3d00'};">${(md.price_change_percentage_24h || 0) >= 0 ? '+' : ''}${(md.price_change_percentage_24h || 0).toFixed(2)}%</span></div>
+                            <div style="margin:12px 0 18px 0;">
+                                <div style='font-size:13px;color:#aaa;'>24s En Düşük / En Yüksek</div>
+                                <div style='font-size:15px;'>$${(md.low_24h.usd || 0).toLocaleString()} / $${(md.high_24h.usd || 0).toLocaleString()}</div>
+                            </div>
+                            <div style="font-size:15px;line-height:1.7;">
+                                <b>Piyasa Değeri:</b> $${(md.market_cap.usd || 0).toLocaleString()}<br>
+                                <b>24s Hacim:</b> $${(md.total_volume.usd || 0).toLocaleString()}<br>
+                                <b>Dolaşımdaki Arz:</b> ${(md.circulating_supply || 0).toLocaleString()}<br>
+                                <b>Toplam Arz:</b> ${md.total_supply ? md.total_supply.toLocaleString() : '-'}<br>
+                                <b>Maksimum Arz:</b> ${md.max_supply ? md.max_supply.toLocaleString() : '-'}
+                            </div>
+                            <div style="margin-top:18px;">
+                                <a href="${data.links.homepage[0] || '#'}" target="_blank" style="color:#ffb300;">Web Sitesi</a>
+                            </div>
+                        </div>
+                        <div style="min-width:340px;flex:2;">
+                            <div id="tv-widget" style="height:340px;width:100%;background:#111;border-radius:12px;"></div>
+                        </div>
+                    </div>
+                `;
+                loadTradingViewWidget(tvSymbol, data.name);
+            } catch (e) {
+                console.error('Coin detay verisi çekilirken hata:', e);
+                if (content) content.innerHTML = '<div style="color:#ff3d00;padding:40px;">Veri alınamadı veya koin bilgileri eksik.</div>';
+            }
+        }
+        window.loadTradingViewWidget = function(symbol, name) {
+            const tvDiv = document.getElementById('tv-widget');
+            if (!tvDiv) return;
+            tvDiv.innerHTML = '';
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://s3.tradingview.com/tv.js';
+            script.onload = function() {
+                if (typeof TradingView !== 'undefined' && TradingView.widget) {
+                    new TradingView.widget({
+                        "container_id": "tv-widget",
+                        "width": "100%",
+                        "height": 340,
+                        "symbol": symbol,
+                        "interval": "60",
+                        "timezone": "Etc/UTC",
+                        "theme": "dark",
+                        "style": "1",
+                        "locale": "tr",
+                        "toolbar_bg": "#181818",
+                        "enable_publishing": false,
+                        "hide_top_toolbar": false,
+                        "save_image": false,
+                        "studies": [],
+                        "withdateranges": true,
+                        "details": true,
+                        "hotlist": false,
+                        "calendar": false,
+                        "watchlist": [symbol]
+                    });
+                } else {
+                    console.error("TradingView widget script failed to load or TradingView is not defined.");
+                    tvDiv.innerHTML = '<div style="text-align: center; color: #ff3d00; padding: 20px;">Grafik yüklenemedi.</div>';
+                }
+            };
+            script.onerror = function() {
+                console.error("Failed to load TradingView script.");
+                tvDiv.innerHTML = '<div style="text-align: center; color: #ff3d00; padding: 20px;">Grafik yüklenemedi.</div>';
+            };
+            document.body.appendChild(script);
+        }
+
+        let allCryptoData = [];
+        let currentPage = 1;
+        const pageSize = 75; // Changed from 50 to 75 items per page
+        const totalPages = 8; // Changed to 8 pages (600/75 = 8)
+
+        async function fetchCryptoData() {
+            const currencyFilter = document.getElementById('currency-filter');
+            const currency = currencyFilter ? currencyFilter.value : 'usd';
+
+            try {
+                // Fetch first 3 pages (225 coins) initially
+                const response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+
+                // --- Yükselenler ve Düşenler ---
+                const sortedByChange = [...data].sort((a, b) => (b.price_change_percentage_24h || 0) - (a.price_change_percentage_24h || 0));
+                const gainers = sortedByChange.slice(0, 5);
+                const losers = sortedByChange.slice(-5).reverse();
+
+                const gainersList = document.getElementById('gainers-list');
+                const losersList = document.getElementById('losers-list');
+
+                if (gainersList) {
+                    gainersList.innerHTML = '';
+                    gainers.forEach((coin) => {
+                        gainersList.innerHTML += `
+                            <li data-coin-id="${coin.id}" data-coin-symbol="${coin.symbol}" data-coin-name="${coin.name}">
+                                <span class="coin-info"><img src="${coin.image}" alt="${coin.symbol}"> ${coin.symbol.toUpperCase()}</span>
+                                <span>${(coin.current_price || 0).toLocaleString(undefined, {style: 'currency', currency: currency.toUpperCase()})}</span>
+                                <span class="change positive">${(coin.price_change_percentage_24h || 0).toFixed(1)}%</span>
+                            </li>`;
+                    });
+                }
+                if (losersList) {
+                    losersList.innerHTML = '';
+                    losers.forEach((coin) => {
+                        losersList.innerHTML += `
+                            <li data-coin-id="${coin.id}" data-coin-symbol="${coin.symbol}" data-coin-name="${coin.name}">
+                                <span class="coin-info"><img src="${coin.image}" alt="${coin.symbol}"> ${coin.symbol.toUpperCase()}</span>
+                                <span>${(coin.current_price || 0).toLocaleString(undefined, {style: 'currency', currency: currency.toUpperCase()})}</span>
+                                <span class="change negative">${(coin.price_change_percentage_24h || 0).toFixed(1)}%</span>
+                            </li>`;
+                    });
+                }
+
+                // --- 24 Saat Hacim ve Piyasa Değeri ---
+                let totalMarketCap = 0;
+                let totalVolume = 0;
+                data.forEach(coin => {
+                    totalMarketCap += (coin.market_cap || 0);
+                    totalVolume += (coin.total_volume || 0);
+                });
+
+                const statMarketcap = document.getElementById('stat-marketcap');
+                const statVolume = document.getElementById('stat-volume');
+                if (statMarketcap) statMarketcap.textContent = `${(totalMarketCap / 1e12).toFixed(2)}T`;
+                if (statVolume) statVolume.textContent = `${(totalVolume / 1e9).toFixed(2)}B`;
+
+                // --- Dominans ---
+                const btc = data.find(c => c.symbol === 'btc');
+                const eth = data.find(c => c.symbol === 'eth');
+                const statDominance = document.getElementById('stat-dominance');
+                if (statDominance) {
+                    let domText = '';
+                    if (btc && totalMarketCap > 0) {
+                        domText += `<b>₿</b> ${((btc.market_cap / totalMarketCap) * 100).toFixed(2)}%`;
+                    }
+                    if (eth && totalMarketCap > 0) {
+                        domText += `<br><b>Ξ</b> ${((eth.market_cap / totalMarketCap) * 100).toFixed(2)}%`;
+                    }
+                    statDominance.innerHTML = domText || '-';
+                }
+
+                // --- Tablo ---
+                const tableBody = document.getElementById('crypto-table-body');
+                if (tableBody) {
+                    tableBody.innerHTML = '';
+                    data.forEach((coin, index) => {
+                        const row = document.createElement('tr');
+                        const priceChangeClass = (coin.price_change_percentage_24h || 0) >= 0 ? 'price-change-positive' : 'price-change-negative';
+
+                        let svgPoints = '';
+                        if (coin.sparkline_in_7d && coin.sparkline_in_7d.price && coin.sparkline_in_7d.price.length > 1) {
+                            const sparkline = coin.sparkline_in_7d.price;
+                            const min = Math.min(...sparkline);
+                            const max = Math.max(...sparkline);
+                            svgPoints = sparkline.map((price, i) => {
+                                const x = (i / (sparkline.length - 1)) * 100;
+                                const y = 100 - ((price - min) / (max - min)) * 100;
+                                return `${x},${isNaN(y) ? 50 : y}`;
+                            }).join(' ');
+                        } else {
+                            svgPoints = '0,50 100,50';
+                        }
+
+                        row.setAttribute('data-coin-id', coin.id);
+
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>
+                                <img src="${coin.image}" alt="${coin.name}" style="width: 24px; height: 24px; margin-right: 8px;">
+                                ${coin.name} (${coin.symbol ? coin.symbol.toUpperCase() : ''})
+                            </td>
+                            <td>${(coin.current_price || 0).toLocaleString(undefined, {style: 'currency', currency: currency.toUpperCase()})}</td>
+                            <td class="${priceChangeClass}">
+                                ${(coin.price_change_percentage_24h || 0).toFixed(2)}%
+                            </td>
+                            <td>${(coin.total_volume || 0).toLocaleString(undefined, {style: 'currency', currency: currency.toUpperCase()})}</td>
+                            <td>${(coin.market_cap || 0).toLocaleString(undefined, {style: 'currency', currency: currency.toUpperCase()})}</td>
+                            <td>${(coin.circulating_supply || 0).toLocaleString()} ${coin.symbol ? coin.symbol.toUpperCase() : ''}</td>
+                            <td>
+                                <svg width="100" height="30" viewBox="0 0 100 30">
+                                    <polyline
+                                        points="${svgPoints}"
+                                        fill="none"
+                                        stroke="${(coin.price_change_percentage_24h || 0) >= 0 ? '#00c853' : '#ff3d00'}"
+                                        stroke-width="2"
+                                    />
+                                </svg>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+
+                // Store all data and update table
+                allCryptoData = data.slice(0, pageSize * totalPages); // Store up to 600 coins
+                currentPage = 1;
+                renderCryptoTablePage(currentPage);
+                renderPagination();
+
+                // Fetch remaining pages in the background
+                for (let page = 2; page <= 3; page++) {
+                    try {
+                        const nextResponse = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=250&page=${page}&sparkline=true&price_change_percentage=24h`);
+                        if (nextResponse.ok) {
+                            const nextData = await nextResponse.json();
+                            allCryptoData = [...allCryptoData, ...nextData];
+                            if (page === 3) {
+                                // Update table with complete data
+                                renderCryptoTablePage(currentPage);
+                            }
+                        }
+                    } catch (error) {
+                        console.error(`Error fetching page ${page}:`, error);
+                    }
+                }
+            } catch (error) {
+                console.error('Veri çekme hatası (fetchCryptoData):', error);
+                const tableBody = document.getElementById('crypto-table-body');
+                if (tableBody) {
+                    tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #ff3d00;">Veriler alınamadı. Lütfen tekrar deneyin.</td></tr>';
+                }
+                const gainersList = document.getElementById('gainers-list');
+                const losersList = document.getElementById('losers-list');
+                if (gainersList) gainersList.innerHTML = '<li>Veri alınamadı.</li>';
+                if (losersList) losersList.innerHTML = '<li>Veri alınamadı.</li>';
+            }
+        }
+
+        // Korku Endeksi
+        async function fetchFearIndex() {
+            try {
+                const res = await fetch('https://api.alternative.me/fng/?limit=1');
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
+                const data = await res.json();
+                const statFear = document.getElementById('stat-fear');
+                if (data && data.data && data.data.length > 0 && statFear) {
+                    const value = data.data[0].value;
+                    const text = data.data[0].value_classification;
+                    statFear.innerHTML = `${value} <span style='font-size:13px;'>${text}</span>`;
+                } else if (statFear) {
+                    statFear.textContent = 'Veri alınamadı.';
+                }
+            } catch (e) {
+                console.error('Korku ve Hırs Endeksi Hatası:', e);
+                const statFear = document.getElementById('stat-fear');
+                if (statFear) statFear.textContent = 'Veri alınamadı.';
+            }
+        }
+
+        // Sayfa yüklendiğinde verileri çek
+        fetchCryptoData();
+        fetchFearIndex();
+
+        // Belirli aralıklarla verileri güncelle
+        setInterval(fetchCryptoData, 60000); // Her 1 dakikada bir
+        setInterval(fetchFearIndex, 3600000); // Her 1 saatte bir (Fear & Greed Index çok sık değişmez)
+
+        // Arama fonksiyonu
+        document.querySelector('.crypto-search')?.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#crypto-table-body tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Sıralama fonksiyonu
+        document.getElementById('sort-by')?.addEventListener('change', (e) => {
+            const sortBy = e.target.value;
+            const tbody = document.getElementById('crypto-table-body');
+            if (!tbody) return;
+
+            const rows = Array.from(tbody.getElementsByTagName('tr'));
+
+            rows.sort((a, b) => {
+                let aValue, bValue;
+
+                switch(sortBy) {
+                    case 'market_cap':
+                        aValue = parseFloat(a.cells[5].textContent.replace(/[^0-9.-]+/g, '')) || 0;
+                        bValue = parseFloat(b.cells[5].textContent.replace(/[^0-9.-]+/g, '')) || 0;
+                        break;
+                    case 'volume':
+                        aValue = parseFloat(a.cells[4].textContent.replace(/[^0-9.-]+/g, '')) || 0;
+                        bValue = parseFloat(b.cells[4].textContent.replace(/[^0-9.-]+/g, '')) || 0;
+                        break;
+                    case 'price':
+                        aValue = parseFloat(a.cells[2].textContent.replace(/[^0-9.-]+/g, '')) || 0;
+                        bValue = parseFloat(b.cells[2].textContent.replace(/[^0-9.-]+/g, '')) || 0;
+                        break;
+                    case 'change':
+                        aValue = parseFloat(a.cells[3].textContent) || 0;
+                        bValue = parseFloat(b.cells[3].textContent) || 0;
+                        break;
+                    default:
+                        aValue = parseFloat(a.cells[5].textContent.replace(/[^0-9.-]+/g, '')) || 0;
+                        bValue = parseFloat(b.cells[5].textContent.replace(/[^0-9.-]+/g, '')) || 0;
+                        break;
+                }
+                return bValue - aValue;
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+        });
+
+        // Para birimi filtresi
+        document.getElementById('currency-filter')?.addEventListener('change', () => {
+            fetchCryptoData();
+        });
+
+        function renderCryptoTablePage(page) {
+            const tableBody = document.getElementById('crypto-table-body');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+
+            const start = (page - 1) * pageSize;
+            const end = start + pageSize;
+            const pageData = allCryptoData.slice(start, end);
+
+            pageData.forEach((coin, index) => {
+                const priceChangeClass = (coin.price_change_percentage_24h || 0) >= 0 ? 'price-change-positive' : 'price-change-negative';
+                let svgPoints = '';
+                if (coin.sparkline_in_7d && coin.sparkline_in_7d.price && coin.sparkline_in_7d.price.length > 1) {
+                    const sparkline = coin.sparkline_in_7d.price;
+                    const min = Math.min(...sparkline);
+                    const max = Math.max(...sparkline);
+                    svgPoints = sparkline.map((price, i) => {
+                        const x = (i / (sparkline.length - 1)) * 100;
+                        const y = 100 - ((price - min) / (max - min)) * 100;
+                        return `${x},${isNaN(y) ? 50 : y}`;
+                    }).join(' ');
+                } else {
+                    svgPoints = '0,50 100,50';
+                }
+
+                const row = document.createElement('tr');
+                row.setAttribute('data-coin-id', coin.id);
+                row.innerHTML = `
+                    <td>${start + index + 1}</td>
+                    <td>
+                        <img src="${coin.image}" alt="${coin.name}" style="width: 24px; height: 24px; margin-right: 8px;">
+                        ${coin.name} (${coin.symbol ? coin.symbol.toUpperCase() : ''})
+                    </td>
+                    <td>${(coin.current_price || 0).toLocaleString(undefined, {style: 'currency', currency: 'USD'})}</td>
+                    <td class="${priceChangeClass}">
+                        ${(coin.price_change_percentage_24h || 0).toFixed(2)}%
+                    </td>
+                    <td>${(coin.total_volume || 0).toLocaleString(undefined, {style: 'currency', currency: 'USD'})}</td>
+                    <td>${(coin.market_cap || 0).toLocaleString(undefined, {style: 'currency', currency: 'USD'})}</td>
+                    <td>${(coin.circulating_supply || 0).toLocaleString()} ${coin.symbol ? coin.symbol.toUpperCase() : ''}</td>
+                    <td>
+                        <svg width="100" height="30" viewBox="0 0 100 30">
+                            <polyline
+                                points="${svgPoints}"
+                                fill="none"
+                                stroke="${(coin.price_change_percentage_24h || 0) >= 0 ? '#00c853' : '#ff3d00'}"
+                                stroke-width="2"
+                            />
+                        </svg>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('crypto-pagination');
+            if (!pagination) return;
+            pagination.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.style.padding = '8px 14px';
+                btn.style.borderRadius = '6px';
+                btn.style.border = 'none';
+                btn.style.background = (i === currentPage) ? '#ffb300' : '#222';
+                btn.style.color = (i === currentPage) ? '#222' : '#fff';
+                btn.style.cursor = 'pointer';
+                btn.onclick = () => {
+                    currentPage = i;
+                    renderCryptoTablePage(currentPage);
+                    renderPagination();
+                };
+                pagination.appendChild(btn);
+            }
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const tab = this.getAttribute('data-tab');
+                const pagination = document.getElementById('crypto-pagination');
+                
+                if (tab === 'coins') {
+                    pagination.style.display = 'flex';
+                    fetchCryptoData();
+                } else if (tab === 'categories') {
+                    pagination.style.display = 'none';
+                    fetchCategoriesData();
+                }
+            });
+        });
+
+        // Kategoriler için örnek veri çekme (CoinGecko)
+        async function fetchCategoriesData() {
+            const tbody = document.getElementById('crypto-table-body');
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Yükleniyor...</td></tr>';
+            try {
+                const res = await fetch('https://api.coingecko.com/api/v3/coins/categories');
+                const data = await res.json();
+                tbody.innerHTML = '';
+                // Limit to first 50 categories
+                data.slice(0, 50).forEach((cat, i) => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${i+1}</td>
+                            <td>${cat.name || '-'}</td>
+                            <td>${cat.id || '-'}</td>
+                            <td>${cat.market_cap ? '$' + cat.market_cap.toLocaleString() : '-'}</td>
+                            <td>${cat.volume_24h ? '$' + cat.volume_24h.toLocaleString() : '-'}</td>
+                            <td>${cat.top_3_coins ? cat.top_3_coins.map(url => `<img src="${url}" style="width:20px;border-radius:50%;">`).join(' ') : '-'}</td>
+                            <td colspan="2"></td>
+                        </tr>
+                    `;
+                });
+            } catch {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Veriler alınamadı.</td></tr>';
+            }
+        }
+
+        // Tema değiştirme fonksiyonu
+        document.getElementById('btn-theme').addEventListener('click', function() {
+            document.body.classList.toggle('light-theme');
+            const themeBtn = document.getElementById('btn-theme');
+            themeBtn.textContent = document.body.classList.contains('light-theme') ? '☀️' : '🌙';
+        });
+
+        // Dil dropdown menüsü
+        const langDropdown = document.getElementById('lang-dropdown');
+        const langBtn = document.getElementById('lang-btn');
+        const langMenu = document.getElementById('lang-menu');
+        const selectedFlag = document.getElementById('selected-flag');
+
+        function setLangUI(lang) {
+            selectedFlag.textContent = lang === 'en' ? '🇺🇸' : '🇹🇷';
+        }
+        setLangUI(currentLang);
+
+        langBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown.classList.toggle('open');
+        });
+
+        langMenu.querySelectorAll('.lang-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                const lang = this.getAttribute('data-lang');
+                updateLanguage(lang);
+                setLangUI(lang);
+                langDropdown.classList.remove('open');
+            });
+        });
+
+        // Menü dışında bir yere tıklanınca menüyü kapat
+        document.addEventListener('click', () => {
+            langDropdown.classList.remove('open');
+        });
+    });
+    </script>
+</body>
+</html>

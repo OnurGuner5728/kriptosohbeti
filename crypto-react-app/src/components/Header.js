@@ -19,7 +19,7 @@ const Header = () => {
       <div className="container">
         <div className="header-content">
           <Link to="/" className="logo">
-            <span className="logo-icon">🚀</span>
+            <img src="/favicon.png" alt="Kripto Sohbeti" className="logo-icon" />
             <span className="logo-text">Kripto Sohbeti</span>
           </Link>
 

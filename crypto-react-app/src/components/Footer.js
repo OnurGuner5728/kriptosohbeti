@@ -55,7 +55,7 @@ const Footer = () => {
           {/* Logo & Description */}
           <div className="footer-section">
             <div className="footer-logo">
-              <span className="logo-icon">🚀</span>
+              <img src="/favicon.png" alt="Kripto Sohbeti" className="logo-icon" />
               <span className="logo-text">Kripto Sohbeti</span>
             </div>
             <p className="footer-description">

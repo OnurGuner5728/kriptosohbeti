@@ -59,7 +59,9 @@
 }
 
 .logo-icon {
-  font-size: 2rem;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
   animation: rocket 3s infinite ease-in-out;
 }
 

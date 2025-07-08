@@ -1,0 +1,26 @@
+{
+  "short_name": "Kripto Sohbeti",
+  "name": "Kripto Sohbeti - Modern Kripto Para Takip Uygulaması",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1a1a2e",
+  "background_color": "#0f0f1e",
+  "description": "Modern ve kullanıcı dostu Türkçe kripto para takip uygulaması 🚀"
+} 

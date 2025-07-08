@@ -5,7 +5,7 @@ from config import COINMARKETCAP_API_KEY
 import requests
 
 app = Flask(__name__)
-CORS(app)  # Frontend'den gelen istekleri kabul etmek için
+CORS(app, origins=['https://*.netlify.app', 'http://localhost:3000'])  # Frontend'den gelen istekleri kabul etmek için
 
 @app.route('/api/crypto-data', methods=['GET'])
 def get_crypto_data():
@@ -707,6 +707,8 @@ def health_check():
     return jsonify({'status': 'OK', 'message': 'API sunucusu çalışıyor'})
 
 if __name__ == '__main__':
-    print("API Sunucusu başlatılıyor...")
-    print("Frontend'den API çağrıları için: http://localhost:5000")
-    app.run(debug=True, host='0.0.0.0', port=5000) 
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    print(f"API Sunucusu başlatılıyor... Port: {port}")
+    print(f"Frontend'den API çağrıları için: http://localhost:{port}")
+    app.run(debug=False, host='0.0.0.0', port=port) 
